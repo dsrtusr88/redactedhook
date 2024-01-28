@@ -5,3 +5,4 @@ bin/
 __debug_bin
 .RedactedHook
 .DS_Store
+.idea

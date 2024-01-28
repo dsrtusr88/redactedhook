@@ -15,9 +15,12 @@ import (
 	"golang.org/x/time/rate"
 )
 
+var httpClient = &http.Client{
+	Timeout: 10 * time.Second,
+}
+
 // sends an HTTP GET request to an endpoint with an API key, applies a rate limiter, and unmarshals the response JSON into a target object.
 func makeRequest(endpoint, apiKey string, limiter *rate.Limiter, indexer string, target interface{}) error {
-
 	if !limiter.Allow() {
 		log.Warn().Msgf("%s: Too many requests", indexer)
 		return fmt.Errorf("rate limit exceeded for %s", indexer)
@@ -34,20 +37,12 @@ func makeRequest(endpoint, apiKey string, limiter *rate.Limiter, indexer string,
 	defer cancel()
 	req = req.WithContext(ctx)
 
-	resp, err := http.DefaultClient.Do(req)
+	resp, err := httpClient.Do(req)
 	if err != nil {
 		log.Error().Err(err).Msg("Error executing HTTP request")
 		return err
 	}
 	defer resp.Body.Close()
-
-	//dump, err := httputil.DumpResponse(resp, true)
-	//if err != nil {
-	//	log.Error().Err(err).Msg("Error dumping the response")
-	//	return err
-	//}
-	//
-	//fmt.Printf("HTTP Response:\n%s\n", dump)
 
 	if resp.StatusCode >= 400 {
 		errMsg := fmt.Sprintf("HTTP error: %d from %s", resp.StatusCode, endpoint)
