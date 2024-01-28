@@ -56,7 +56,7 @@ func WebhookHandler(w http.ResponseWriter, r *http.Request) {
 	// Call hooks
 
 	if requestData.TorrentID != 0 && (requestData.MinSize != 0 || requestData.MaxSize != 0) {
-		if err := hookSize(&requestData, apiBase); err != nil {
+		if err := getTorrentSize(&requestData, apiBase); err != nil {
 			handleErrors(w, err, StatusSizeNotAllowed)
 			return
 
@@ -64,7 +64,7 @@ func WebhookHandler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	if requestData.TorrentID != 0 && requestData.Uploaders != "" {
-		if err := hookUploader(&requestData, apiBase); err != nil {
+		if err := getUploader(&requestData, apiBase); err != nil {
 			handleErrors(w, err, StatusUploaderNotAllowed)
 			return
 
@@ -72,14 +72,14 @@ func WebhookHandler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	if requestData.TorrentID != 0 && requestData.RecordLabel != "" {
-		if err := hookRecordLabel(&requestData, apiBase); err != nil {
+		if err := getRecordLabel(&requestData, apiBase); err != nil {
 			handleErrors(w, err, StatusLabelNotAllowed)
 			return
 		}
 	}
 
 	if requestData.MinRatio != 0 {
-		if err := hookRatio(&requestData, apiBase); err != nil {
+		if err := getUserRatio(&requestData, apiBase); err != nil {
 			handleErrors(w, err, StatusRatioNotAllowed)
 			return
 

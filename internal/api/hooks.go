@@ -10,8 +10,7 @@ import (
 )
 
 // checks if the uploader is allowed based on the requestData.
-func hookUploader(requestData *RequestData, apiBase string) error {
-
+func getUploader(requestData *RequestData, apiBase string) error {
 	torrentData, err := fetchResponseData(requestData, requestData.TorrentID, "torrent", apiBase)
 	if err != nil {
 		return err
@@ -42,7 +41,7 @@ func hookUploader(requestData *RequestData, apiBase string) error {
 }
 
 // checks if the record label is allowed based on the requestData.
-func hookRecordLabel(requestData *RequestData, apiBase string) error {
+func getRecordLabel(requestData *RequestData, apiBase string) error {
 	torrentData, err := fetchResponseData(requestData, requestData.TorrentID, "torrent", apiBase)
 	if err != nil {
 		return err
@@ -70,7 +69,7 @@ func hookRecordLabel(requestData *RequestData, apiBase string) error {
 }
 
 // checks if the torrent size is within the allowed range based on the requestData.
-func hookSize(requestData *RequestData, apiBase string) error {
+func getTorrentSize(requestData *RequestData, apiBase string) error {
 	torrentData, err := fetchResponseData(requestData, requestData.TorrentID, "torrent", apiBase)
 	if err != nil {
 		return err
@@ -93,7 +92,7 @@ func hookSize(requestData *RequestData, apiBase string) error {
 }
 
 // checks if the user ratio is above the minimum requirement based on the requestData.
-func hookRatio(requestData *RequestData, apiBase string) error {
+func getUserRatio(requestData *RequestData, apiBase string) error {
 	userID := requestData.REDUserID
 	minRatio := requestData.MinRatio
 	if requestData.Indexer == "ops" {
