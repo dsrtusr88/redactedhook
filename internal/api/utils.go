@@ -38,7 +38,7 @@ func getAPIKey(requestData *RequestData) (string, error) {
 }
 
 // sets the Authorization header in an HTTP request header based on the indexer specified
-func setAuthorizationHeader(reqHeader *http.Header, requestData *RequestData) {
+func setAuthorizationHeader(reqHeader http.Header, requestData RequestData) {
 	var apiKey string
 	if requestData.Indexer == "redacted" {
 		apiKey = requestData.REDKey

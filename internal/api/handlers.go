@@ -51,7 +51,7 @@ func WebhookHandler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	reqHeader := make(http.Header)
-	setAuthorizationHeader(&reqHeader, &requestData)
+	setAuthorizationHeader(reqHeader, requestData)
 
 	// Call hooks
 
@@ -93,7 +93,7 @@ func WebhookHandler(w http.ResponseWriter, r *http.Request) {
 func handleErrors(w http.ResponseWriter, err error, defaultStatusCode int) {
 	if strings.Contains(err.Error(), "invalid JSON response") {
 		http.Error(w, "Internal Server Error", http.StatusInternalServerError)
-		return // We're done here, no need to continue.
+		return
 	}
 
 	if strings.HasPrefix(err.Error(), "HTTP error:") {
@@ -102,11 +102,11 @@ func handleErrors(w http.ResponseWriter, err error, defaultStatusCode int) {
 		_, scanErr := fmt.Sscanf(err.Error(), "HTTP error: %d", &statusCode)
 		if scanErr == nil && statusCode != 0 {
 			http.Error(w, err.Error(), statusCode)
-			return // We're done here, too.
+			return
 		}
-		// Fallback to internal server error if status code extraction fails
+
 		http.Error(w, "Internal Server Error", http.StatusInternalServerError)
-		return // Still done.
+		return
 	}
 
 	http.Error(w, err.Error(), defaultStatusCode)
